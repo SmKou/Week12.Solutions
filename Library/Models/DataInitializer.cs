@@ -15,7 +15,7 @@ public static class DataInitializer
 
         Book[] books = new Book[]
         {
-        new Book { Title = "Book Title" }
+            new Book { Title = "Book Title" }
         };
 
         _db.Books.AddRange(books);

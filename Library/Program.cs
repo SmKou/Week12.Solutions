@@ -1,5 +1,6 @@
 global using System;
 global using System.Collections.Generic;
+global using System.ComponentModel.DataAnnotations;
 global using System.Linq;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.AspNetCore.Builder;
@@ -31,6 +32,7 @@ class Program
         builder.Services.AddIdentity<AppUser, IdentityRole>()
             .AddEntityFrameworkStores<LibraryContext>()
             .AddDefaultTokenProviders();
+            .AddRoles<IdentityRole>();
 
         builder.Services.Configure<IdentityOptions>(options =>
         {
@@ -50,12 +52,29 @@ class Program
             options.Password.RequiredUniqueChars = 0;
         });
 
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Librarian"))
+        });
+        builder.Services.AddAuthentication();
+
         WebApplication app = builder.Build();
 
         using (var scope = app.Services.CreateScope())
         {
             var db = scope.ServiceProvider.GetRequiredService<LibraryContext>();
             db.Database.Migrate();
+
+            var roleManager = scope.ServiceProvider.GetRequiredService<roleManager<IdentityRole>>();
+
+            string[] roleNames = { "Librarian" };
+            foreach (string role in roleNames)
+            {
+                bool roleExists = roleManager.RoleExistsAsync(role).Result;
+                if (!roleExists)
+                    roleManager.CreateAsync(new IdentityRole(role)).Wait();
+            }
+
             DataInitializer.Init(db);
         }
 
