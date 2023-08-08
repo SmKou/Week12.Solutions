@@ -29,9 +29,9 @@ class Program
             )
         );
 
-        builder.Services.AddIdentity<AppUser, IdentityRole>()
+        builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<LibraryContext>()
-            .AddDefaultTokenProviders();
+            .AddDefaultTokenProviders()
             .AddRoles<IdentityRole>();
 
         builder.Services.Configure<IdentityOptions>(options =>
@@ -52,10 +52,7 @@ class Program
             options.Password.RequiredUniqueChars = 0;
         });
 
-        builder.Services.AddAuthorization(options =>
-        {
-            options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Librarian"))
-        });
+        builder.Services.AddAuthorization(options => options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Librarian")));
         builder.Services.AddAuthentication();
 
         WebApplication app = builder.Build();
@@ -65,9 +62,9 @@ class Program
             var db = scope.ServiceProvider.GetRequiredService<LibraryContext>();
             db.Database.Migrate();
 
-            var roleManager = scope.ServiceProvider.GetRequiredService<roleManager<IdentityRole>>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            string[] roleNames = { "Librarian" };
+            string[] roleNames = { "Librarian", "Author" };
             foreach (string role in roleNames)
             {
                 bool roleExists = roleManager.RoleExistsAsync(role).Result;

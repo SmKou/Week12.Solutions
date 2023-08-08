@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
 namespace Library.Models;
 
 public class LibraryContext : IdentityDbContext<ApplicationUser>
@@ -24,9 +26,8 @@ public class LibraryContext : IdentityDbContext<ApplicationUser>
     public DbSet<BookCopy> BookCopies { get; set; }
     public DbSet<BookVersion> BookVersions { get; set; }
     public DbSet<PatronCategory> PatronCategories { get; set; }
-    public DbSet<PatronRelation> PatronRelations { get; set; }
     public DbSet<UserLanguage> UserLanguages { get; set; }
-    public DbSet<UserNotifications> UserNotifications { get; set; }
+    public DbSet<UserNotification> UserNotifications { get; set; }
 
     public LibraryContext(DbContextOptions options) : base(options) {}
 }

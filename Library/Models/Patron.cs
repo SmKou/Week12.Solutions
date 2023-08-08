@@ -4,8 +4,10 @@ public class Patron
 {
     public int PatronId { get; set; }
 
+    public int GuardianId { get; set; }
+    public Patron Guardian { get; set; }
+
     public List<PatronCategory> Categories { get; }
-    public List<PatronRelation> Relations { get; }
 
     public List<OnHold> Holds { get; }
     public List<WaitList> Waitlists { get; }
