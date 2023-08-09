@@ -8,6 +8,7 @@ public class Patron
     public Patron Guardian { get; set; }
 
     public List<PatronCategory> Categories { get; }
+    public List<PatronAuthor> Authors { get; }
 
     public List<OnHold> Holds { get; }
     public List<WaitList> Waitlists { get; }

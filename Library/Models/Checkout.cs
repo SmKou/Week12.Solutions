@@ -5,6 +5,7 @@ public class Checkout
     public int CheckoutId { get; set; }
     public DateTime CheckedOut { get; set; }
     public DateTime DueDate { get; set; }
+    public int NumRenewals { get; set; }
 
     public int BookCopyId { get; set; }
     public BookCopy BookCopy { get; set; }

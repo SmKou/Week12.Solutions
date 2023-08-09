@@ -3,7 +3,6 @@ namespace Library.Models;
 public class BookVersion
 {
     public int BookVersionId { get; set; }
-    public string Title { get; set; }
     public int Edition { get; set; }
     public string ISBN { get; set; }
     public DateTime Published { get; set; }
@@ -21,5 +20,5 @@ public class BookVersion
     public Language Language { get; set; }
 
     public List<BookCopy> Copies { get; }
-    public List<Recommendation> Recommendations { get; }
+    public List<BookContributor> Contributors { get; }
 }

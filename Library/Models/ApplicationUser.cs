@@ -7,8 +7,6 @@ public class ApplicationUser : IdentityUser
     /* Inherited */
     // Id
     // Role
-    // FirstName
-    // LastName
     // UserName
     // NormalizedUserName
     // Email
@@ -16,9 +14,10 @@ public class ApplicationUser : IdentityUser
     // PasswordHash
     // PhoneNumber
     
-    public DateTime DateOfBirth { get; set; }
     public string CardNumber { get; set; }
-    public string Country { get; set; }
+    
+    public int PersonId { get; set; }
+    public Person Person;
 
     public List<UserLanguage> Languages { get; }
     public List<UserNotification> Notifications { get; }
