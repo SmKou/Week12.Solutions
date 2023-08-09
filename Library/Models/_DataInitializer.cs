@@ -11,24 +11,49 @@ public static class DataInitializer
 
         db.Categories.Add(new Category
         { 
-            Name = "Modernist", 
+            Name = "Modernist",
+            Searchable = SearchFormatter.Format("Modernist"),
             Description = "Originated in the late 19th and early 20th century, charactered by a self-conscious break with traditional ways of writing in both poetry and prose fiction writing." 
         });
         
         db.Formats.AddRange(new Format[]
         {
-            new Format { Name = "Paper Book"},
-            new Format { Name = "Audio Book"},
-            new Format { Name = "Braille"},
-            new Format { Name = "Large Print" }
+            new Format { 
+                Name = "Paper Book",
+                Searchable = SearchFormatter.Format("Paper Book")
+            },
+            new Format { 
+                Name = "Audio Book",
+                Searchable = SearchFormatter.Format("Audio Book")
+            },
+            new Format { 
+                Name = "Braille",
+                Searchable = SearchFormatter.Format("Braille")
+            },
+            new Format { 
+                Name = "Large Print",
+                Searchable = SearchFormatter.Format("Large Print")
+            }
         });
         
         db.Languages.AddRange(new Language[]
         {
-            new Language { Name = "English" },
-            new Language { Name = "Chinese" },
-            new Language { Name = "French" },
-            new Language { Name = "Afrikaans" }
+            new Language { 
+                Name = "English",
+                Searchable = SearchFormatter.Format("English")
+            },
+            new Language { 
+                Name = "Chinese",
+                Searchable = SearchFormatter.Format("Chinese")
+            },
+            new Language { 
+                Name = "French",
+                Searchable = SearchFormatter.Format("French")
+            },
+            new Language { 
+                Name = "Afrikaans",
+                Searchable = SearchFormatter.Format("Afrikaans")
+            }
         });
         
         db.MaturityRatings.AddRange(new MaturityRating[]
@@ -99,24 +124,60 @@ public static class DataInitializer
 
         db.Publishers.AddRange(new Publisher[]
         {
-            new Publisher { Name = "Self-Published" },
-            new Publisher { Name = "THIS.Library" },
-            new Publisher { Name = "Yale University Press" },
-            new Publisher { Name = "Viking" },
-            new Publisher { Name = "Allen Lane" }
+            new Publisher {
+                Name = "Self-Published",
+                Searchable = SearchFormatter.Format("Self-Published")
+            },
+            new Publisher { 
+                Name = "THIS.Library",
+                Searchable = SearchFormatter.Format("THIS.Library")
+            },
+            new Publisher { 
+                Name = "Yale University Press",
+                Searchable = SearchFormatter.Format("Yale University Press")
+            },
+            new Publisher { 
+                Name = "Viking",
+                Searchable = SearchFormatter.Format("Viking")
+            },
+            new Publisher { 
+                Name = "Allen Lane", 
+                Searchable = SearchFormatter.Format("Allen Lane")
+            }
         });
 
-        db.Persons.Add(new Person
+        Person[] persons = new Person[]
         {
-            FirstName = "Valentin Louis Georges Eugène Marcel",
-            LastName = "Proust",
-            DateOfBirth = new DateTime(1871, 7, 10),
-            CountryOfOrigin = "France"
-        });
+            new Person
+            {
+                FirstName = "Valentin Louis Georges Eugène Marcel",
+                LastName = "Proust",
+                Searchable = SearchFormatter.Format("Valentin Louis Georges Eugène Marcel", "Proust"),
+                DateOfBirth = new DateTime(1871, 7, 10),
+                CountryOfOrigin = "France"
+            },
+            new Person
+            {
+                FirstName = "Jane",
+                LastName = "Doe",
+                Searchable = SearchFormatter.Format("Jane", "Doe"),
+                DateOfBirth = new DateTime(2000, 1, 1),
+                CountryOfOrigin = "United States of America"
+            },
+            new Person
+            {
+                FirstName = "John",
+                LastName = "Smith",
+                Searchable = SearchFormatter.Format("John", "Smith"),
+                DateOfBirth = new DateTime(1960, 12, 31),
+                CountryOfOrigin = "United Kingdom"
+            }
+        };
+        db.Persons.AddRange(persons);
         
         int personId = db.Persons
-            .Single(person => person.FirstName == "Valentin Louis Georges Eugène Marcel" 
-            && person.LastName == "Proust").PersonId;
+            .Single(person => person.Searchable.Contains("marcelproust"))
+            .PersonId;
         db.Authors.Add(new Author
         {
             PenName = "Marcel Proust",
@@ -127,51 +188,56 @@ public static class DataInitializer
 
         db.BookSeries.Add(new BookSerial
         {
-            SerialName = "insearchoflosttime-marcelproust",
+            Searchable = SearchFormatter.Format("In Search of Lost Time", "Marcel Proust"),
             IsFinished = true
         });
             
         int serialId = db.BookSeries
-            .FirstOrDefault(serial => serial.SerialName == "insearchoflosttime-marcelproust")
+            .FirstOrDefault(serial => serial.Searchable == "insearchoflosttimemarcelproust")
             .BookSerialId;
         int[] languageIds = new int[]
         {
             db.Languages
-                .SingleOrDefault(lang => lang.Name == "French")
+                .SingleOrDefault(lang => lang.Searchable == "french")
                 .LanguageId,
             db.Languages
-                .SingleOrDefault(lang => lang.Name == "English")
+                .SingleOrDefault(lang => lang.Searchable == "english")
                 .LanguageId
         };
+
         db.SerialTitles.AddRange(new SerialTitle[]
         {
             new SerialTitle
             {
                 Title = "À La Recherche du Temps Perdu",
+                Searchable = SearchFormatter.Format("À La Recherche du Temps Perdu"),
                 BookSerialId = serialId,
                 LanguageId = languageIds[0]
             },
             new SerialTitle
             {
                 Title = "La Recherche",
+                Searchable = SearchFormatter.Format("La Recherche"),
                 BookSerialId = serialId,
                 LanguageId = languageIds[0]
             },
             new SerialTitle
             {
                 Title = "In Search of Lost Time",
+                Searchable = SearchFormatter.Format("In Search of Lost Time"),
                 BookSerialId = serialId,
                 LanguageId = languageIds[1]
             },
             new SerialTitle
             {
                 Title = "Remembrance of Things Past",
+                Searchable = SearchFormatter.Format("Remembrance of Things Past"),
                 BookSerialId = serialId,
                 LanguageId = languageIds[1]
             }
         });
 
-        string[] bookTitles = new string[]
+        string[] titles = new string[]
         {
             "Swann's Way",
             "In the Shadow of Young Girls in Flower",
@@ -188,57 +254,95 @@ public static class DataInitializer
             .SingleOrDefault(rating => rating.Rating == "PG")
             .MaturityRatingId;
 
-        Book[] books = new Book[bookTitles.Length];
+        Book[] books = new Book[titles.Length];
         for (int i = 0; i < books.Length; i++)
-        {
-            string bookname = Book.SetBookName(bookTitles[i], penname);
             books[i] = new Book
             {
-                BookName = bookname,
+                Searchable = SearchFormatter.Format(titles[i], penname),
                 MaturityRatingId = ratingId,
                 BookSerialId = serialId,
                 NumInSeries = i + 1
             };
-        }
         db.Books.AddRange(books);
         
         int langId = db.Languages
-            .SingleOrDefault(lang => lang.Name == "English")
+            .SingleOrDefault(lang => lang.Searchable == "english")
             .LanguageId;
-        List<BookTitle> btitles = new List<BookTitle>();
-        for (int i = 0; i < bookTitles.Length; i++)
+
+        List<BookTitle> booktitles = new List<BookTitle>();
+        for (int i = 0; i < titles.Length; i++)
         {
-            string condensedTitle = bookTitles[i];
-            condensedTitle = String.Join("", condensedTitle.Split(new char[] { '\'', ':', '-' }));
-            condensedTitle = String.Join("", condensedTitle.ToLower().Split(" "));
+            string searchable = SearchFormatter.Format(titles[i], penname);
             int bookId = db.Books
-                .SingleOrDefault(book => book.BookName == condensedTitle + condensedPenName)
+                .SingleOrDefault(book => book.Searchable == searchable)
                 .BookId;
-            btitles.Add(new BookTitle
+            booktitles.Add(new BookTitle
             {
-                Title = bookTitles[i],
+                Title = titles[i],
+                Searchable = SearchFormatter.Format(titles[i]),
                 BookId = bookId,
                 LanguageId = langId
             });
         }
-        db.BookTitles.AddRange(btitles.ToArray());
+        db.BookTitles.AddRange(booktitles.ToArray());
 
-        db.Contributors.AddRange(new Contributor[]
+        Contributor[] contributors = new Contributor[]
         {
-            new Contributor { Name = "C.K. Scott Moncrieff" },
-            new Contributor { Name = "William C. Carter" },
-            new Contributor { Name = "Christopher Prendergast" },
-            new Contributor { Name = "Lydia Davis" },
-            new Contributor { Name = "James Grieve" },
-            new Contributor { Name = "Mark Trehame" },
-            new Contributor { Name = "John Sturrock" },
-            new Contributor { Name = "Carol Clark" },
-            new Contributor { Name = "Peter Collier" },
-            new Contributor { Name = "Ian Patterson" }
-        });
+            new Contributor
+            {
+                Name = "C.K. Scott Moncrieff",
+                Searchable = SearchFormatter.Format("C.K. Scott Moncrieff")
+            },
+            new Contributor
+            {
+                Name = "William C. Carter",
+                Searchable = SearchFormatter.Format("William C. Carter")
+            },
+            new Contributor
+            {
+                Name = "Christopher Prendergast",
+                Searchable = SearchFormatter.Format("Christopher Prendergast")
+            },
+            new Contributor
+            {
+                Name = "Lydia Davis",
+                Searchable = SearchFormatter.Format("Lydia Davis")
+            },
+            new Contributor
+            {
+                Name = "James Grieve",
+                Searchable = SearchFormatter.Format("James Grieve")
+            },
+            new Contributor
+            {
+                Name = "Mark Trehame",
+                Searchable = SearchFormatter.Format("Mark Trehame")
+            },
+            new Contributor
+            {
+                Name = "John Sturrock",
+                Searchable = SearchFormatter.Format("John Sturrock")
+            },
+            new Contributor
+            {
+                Name = "Carol Clark",
+                Searchable = SearchFormatter.Format("Carol Clark")
+            },
+            new Contributor
+            {
+                Name = "Peter Collier",
+                Searchable = SearchFormatter.Format("Peter Collier")
+            },
+            new Contributor
+            {
+                Name = "Ian Patterson",
+                Searchable = SearchFormatter.Format("Ian Patterson")
+            }
+        };
+        db.Contributors.AddRange(contributors);
 
         int formatId = db.Formats
-            .SingleOrDefault(format => format.Name == "Paper Book")
+            .SingleOrDefault(format => format.Searchable == "paperbook")
             .FormatId;
         db.BookVersions.AddRange(new BookVersion[]
         {
@@ -247,10 +351,10 @@ public static class DataInitializer
                 ISBN = "978-0300185430",
                 Published = new DateTime(2013, 11, 14),
                 BookId = db.Books
-                    .FirstOrDefault(book => book.BookName == "swannsway-marcelproust")
+                    .FirstOrDefault(book => book.Searchable == "swannswaymarcelproust")
                     .BookId,
                 PublisherId = db.Publishers
-                    .FirstOrDefault(publisher => publisher.Name == "Yale University Press")
+                    .FirstOrDefault(publisher => publisher.Searchable == "yaleuniversitypress")
                     .PublisherId,
                 FormatId = formatId,
                 LanguageId = langId
@@ -260,10 +364,10 @@ public static class DataInitializer
                 ISBN = "978-0300185423",
                 Published = new DateTime(2015, 10, 13),
                 BookId = db.Books
-                    .FirstOrDefault(book => book.BookName == "intheshadowofyounggirlsinflower-marcelproust")
+                    .FirstOrDefault(book => book.Searchable == "intheshadowofyounggirlsinflowermarcelproust")
                     .BookId,
                 PublisherId = db.Publishers
-                    .FirstOrDefault(publisher => publisher.Name == "Yale University Press")
+                    .FirstOrDefault(publisher => publisher.Searchable == "yaleuniversitypress")
                     .PublisherId,
                 FormatId = formatId,
                 LanguageId = langId
@@ -273,10 +377,10 @@ public static class DataInitializer
                 ISBN = "978-0300186192",
                 Published = new DateTime(2018, 11, 20),
                 BookId = db.Books
-                    .FirstOrDefault(book => book.BookName == "theguermantesway-marcelproust")
+                    .FirstOrDefault(book => book.Searchable == "theguermanteswaymarcelproust")
                     .BookId,
                 PublisherId = db.Publishers
-                    .FirstOrDefault(publisher => publisher.Name == "Yale University Press")
+                    .FirstOrDefault(publisher => publisher.Searchable == "yaleuniversitypress")
                     .PublisherId,
                 FormatId = formatId,
                 LanguageId = langId
@@ -286,10 +390,10 @@ public static class DataInitializer
                 ISBN = "978-0300186208",
                 Published = new DateTime(2021, 6, 22),
                 BookId = db.Books
-                    .FirstOrDefault(book => book.BookName == "sodomandgomorrah-marcelproust")
+                    .FirstOrDefault(book => book.Searchable == "sodomandgomorrahmarcelproust")
                     .BookId,
                 PublisherId = db.Publishers
-                    .FirstOrDefault(publisher => publisher.Name == "Yale University Press")
+                    .FirstOrDefault(publisher => publisher.Searchable == "yaleuniversitypress")
                     .PublisherId,
                 FormatId = formatId,
                 LanguageId = langId
@@ -299,10 +403,10 @@ public static class DataInitializer
                 ISBN = "0-14-243796-4",
                 Published = new DateTime(2004, 11, 30),
                 BookId = db.Books
-                    .FirstOrDefault(book => book.BookName == "swannsway-marcelproust")
+                    .FirstOrDefault(book => book.Searchable == "swannswaymarcelproust")
                     .BookId,
                 PublisherId = db.Publishers
-                    .FirstOrDefault(publisher => publisher.Name == "Viking")
+                    .FirstOrDefault(publisher => publisher.Searchable == "viking")
                     .PublisherId,
                 FormatId = formatId,
                 LanguageId = langId
@@ -312,10 +416,10 @@ public static class DataInitializer
                 ISBN = "0-14-303907-5",
                 Published = new DateTime(2005, 1, 25),
                 BookId = db.Books
-                    .FirstOrDefault(book => book.BookName == "intheshadowofyounggirlsinflower-marcelproust")
+                    .FirstOrDefault(book => book.Searchable == "intheshadowofyounggirlsinflowermarcelproust")
                     .BookId,
                 PublisherId = db.Publishers
-                    .FirstOrDefault(publisher => publisher.Name == "Viking")
+                    .FirstOrDefault(publisher => publisher.Searchable == "viking")
                     .PublisherId,
                 FormatId = formatId,
                 LanguageId = langId
@@ -324,9 +428,11 @@ public static class DataInitializer
             {
                 ISBN = "0-14-303922-9",
                 Published = new DateTime(2005, 5, 31),
-                BookId = db.Books.FirstOrDefault(book => book.BookName == "theguermantesway-marcelproust").BookId,
+                BookId = db.Books
+                    .FirstOrDefault(book => book.Searchable == "theguermanteswaymarcelproust")
+                    .BookId,
                 PublisherId = db.Publishers
-                    .FirstOrDefault(publisher => publisher.Name == "Allen Lane")
+                    .FirstOrDefault(publisher => publisher.Searchable == "allenlane")
                     .PublisherId,
                 FormatId = formatId,
                 LanguageId = langId
@@ -335,37 +441,18 @@ public static class DataInitializer
             {
                 ISBN = "0-14-303931-8",
                 Published = new DateTime(2003, 10, 28),
-                BookId = db.Books.FirstOrDefault(book => book.BookName == "sodomandgomorrah-marcelproust").BookId,
+                BookId = db.Books
+                    .FirstOrDefault(book => book.Searchable == "sodomandgomorrahmarcelproust")
+                    .BookId,
                 PublisherId = db.Publishers
-                    .FirstOrDefault(publisher => publisher.Name == "Allen Lane")
+                    .FirstOrDefault(publisher => publisher.Searchable == "allenlane")
                     .PublisherId,
                 FormatId = formatId,
                 LanguageId = langId
             }
         });
 
-        Person patronPerson = new Person
-        {
-            FirstName = "Jane",
-            LastName = "Doe",
-            DateOfBirth = new DateTime(2000, 1, 1),
-            CountryOfOrigin = "United States of America"
-        };
-        db.Persons.Add(patronPerson);
-        int patronPersonId = db.Persons
-            .SingleOrDefault
-        ApplicationUser patronUser = new ApplicationUser
-        {
-
-        }
-
-        Person librarianPerson = new Person
-        {
-            FirstName = "John",
-            LastName = "Smith",
-            DateOfBirth = new DateTime(1960, 12, 31),
-            CountryOfOrigin = "United Kingdom"
-        };
+        
 
         db.SaveChanges();
         _hasInit = true;
