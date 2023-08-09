@@ -4,6 +4,7 @@ public class Author
 {
     public int AuthorId { get; set; }
     public string PenName { get; set; }
+    public string Searchable { get; set; }
     public string Bio { get; set; }
     
     public bool Deceased { get; set; }

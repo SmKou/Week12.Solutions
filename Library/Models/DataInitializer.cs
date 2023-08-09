@@ -184,7 +184,6 @@ public static class DataInitializer
         string penname = db.Authors
             .SingleOrDefault(author => author.PenName == "Marcel Proust")
             .PenName;
-        string condensedPenName = String.Join("", penname.ToLower().Split(" "));
         int ratingId = db.MaturityRatings
             .SingleOrDefault(rating => rating.Rating == "PG")
             .MaturityRatingId;
@@ -192,12 +191,10 @@ public static class DataInitializer
         Book[] books = new Book[bookTitles.Length];
         for (int i = 0; i < books.Length; i++)
         {
-            string condensedTitle = bookTitles[i];
-            condensedTitle = String.Join("", condensedTitle.Split(new char[] { '\'', ':', '-' }));
-            condensedTitle = String.Join("", condensedTitle.ToLower().Split(" "));
+            string bookname = Book.SetBookName(bookTitles[i], penname);
             books[i] = new Book
             {
-                BookName = condensedTitle + condensedPenName,
+                BookName = bookname,
                 MaturityRatingId = ratingId,
                 BookSerialId = serialId,
                 NumInSeries = i + 1
@@ -354,6 +351,13 @@ public static class DataInitializer
             DateOfBirth = new DateTime(2000, 1, 1),
             CountryOfOrigin = "United States of America"
         };
+        db.Persons.Add(patronPerson);
+        int patronPersonId = db.Persons
+            .SingleOrDefault
+        ApplicationUser patronUser = new ApplicationUser
+        {
+
+        }
 
         Person librarianPerson = new Person
         {

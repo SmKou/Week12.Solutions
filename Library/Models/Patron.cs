@@ -3,6 +3,7 @@ namespace Library.Models;
 public class Patron
 {
     public int PatronId { get; set; }
+    public string Searchable { get; set; }
 
     public int GuardianId { get; set; }
     public Patron Guardian { get; set; }

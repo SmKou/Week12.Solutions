@@ -3,8 +3,7 @@ namespace Library.Models;
 public class Book
 {
     public int BookId { get; set; }
-    // book title in english - author penname
-    public string BookName { get; set; }
+    public string Searchable { get; set; }
 
     public int MaturityRatingId { get; set; }
     public MaturityRating MaturityRating { get; set; }

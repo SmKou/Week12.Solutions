@@ -4,6 +4,7 @@ public class SerialTitle
 {
     public int SerialTitleId { get; set; }
     public string Title { get; set; }
+    public string Searchable { get; set; }
 
     public int BookSerialId { get; set; }
     public BookSerial BookSerial { get; set; }
