@@ -22,7 +22,7 @@ public class HomeController : Controller
         if (ViewBag.IsLoggedIn)
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            ApplicationUser currentUser = await _userManager.FindByAsync(userId);
+            ApplicationUser currentUser = await _userManager.FindByIdAsync(userId);
             Person member = _db.Persons.SingleOrDefault(person => person.PersonId == currentUser.PersonId);
             ViewBag.Name = member.FirstName;
         }

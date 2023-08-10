@@ -2,5 +2,62 @@
     Layout = "_Layout";
 }
 @using Library.Models;
+@using Library.ViewModels;
+@model QueryViewModel
 
-<main></main>
+<main>
+    <section>
+        @using (Html.BeginForm("Search", "Home", FormMethod.Post))
+        {
+            <div class="form-entry">
+                @Html.LabelFor(model => model.TitleQuery)
+                @Html.TextBoxFor(model => model.TitleQuery)
+            </div>
+            <div class="form-entry">
+                @Html.LabelFor(model => model.AuthorQuery)
+                @Html.TextBoxFor(model => model.AuthorQuery)
+            </div>
+            <input type="submit" value="Search" />
+        }
+    </section>
+    <section>
+        @if (ViewBag.Matches != null)
+        {
+            <h3>Your Matches:</h3>
+            <ul>
+                @foreach (BookMatchViewModel res in ViewBag.Matches)
+                {
+                    <li class="list-row">
+                        <a href="/Books/Details/@res.BookId">
+                            <div class="list-entry">
+                                Book: @res.Title
+                            </div>
+                            <div class="list-entry">
+                                Titles: 
+                                @if (res.MatchInTitles == null) 
+                                {
+                                    <span>No matches found.</span>
+                                }
+                                else
+                                {
+                                    <span>@res.MatchInTitles</span>
+                                }
+                            </div>
+                            <div class="list-entry">
+                                Authors:
+                                @if (res.MatchInAuthors == null)
+                                {
+                                    <span>No matches found.</span>
+                                }
+                                else
+                                {
+                                    <span>@res.MatchInAuthors</span>
+                                }
+                            </div>
+                        </a>
+                    </li>
+                }
+            </ul>
+        }
+    </section>
+</main>

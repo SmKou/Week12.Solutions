@@ -36,4 +36,29 @@ public static class SearchFormatter
         }
         return String.Join(" ", words);
     }
+
+    public static string FormatList(string[] list)
+    {
+        string line = "";
+        for (int i = 0; i < list.Length; i++)
+        {
+            if (i != 0 && list.Length != 2)
+                line += ",";
+            line += " ";
+            if (i == list.Length - 1)
+                line += "and ";
+            line += list[i];
+        }
+        return line;
+    }
+
+    public static string FormatList(List<string> list)
+    {
+        return FormatList(list.ToArray());
+    }
+
+    public static string FormatList(string s)
+    {
+        return FormatList(s.Split(" "));
+    }
 }
