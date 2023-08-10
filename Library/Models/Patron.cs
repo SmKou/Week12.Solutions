@@ -5,9 +5,6 @@ public class Patron
     public int PatronId { get; set; }
     public string Searchable { get; set; }
 
-    public int GuardianId { get; set; }
-    public Patron Guardian { get; set; }
-
     public List<PatronCategory> Categories { get; }
     public List<PatronAuthor> Authors { get; }
 
@@ -17,4 +14,5 @@ public class Patron
     public List<Checkout> Checkouts { get; }
 
     public ApplicationUser User { get; set; }
+    public List<ChildGuardian> Relations { get; set; }
 }

@@ -24,6 +24,7 @@ public class LibraryContext : IdentityDbContext<ApplicationUser>
     public DbSet<WaitList> WaitLists { get; set; }
 
     public DbSet<AuthorCategory> AuthorCategories { get; set; }
+    public DbSet<ChildGuardian> ChildGuardians { get; set; }
     public DbSet<BookAuthor> BookAuthors { get; set; }
     public DbSet<BookCategory> BookCategories { get; set; }
     public DbSet<BookContributor> BookContributors { get; set; }

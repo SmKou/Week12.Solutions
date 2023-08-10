@@ -61,10 +61,6 @@ class Program
 
         using (var scope = app.Services.CreateScope())
         {
-            var db = scope.ServiceProvider.GetRequiredService<LibraryContext>();
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            db.Database.Migrate();
-
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
             string[] roleNames = { "Librarian", "Author" };
@@ -74,9 +70,9 @@ class Program
                 if (!roleExists)
                     roleManager.CreateAsync(new IdentityRole(role)).Wait();
             }
-
-            DataInitializer.Init(db, userManager);
         }
+
+        DataInitializer.Init(app);
 
         // app.UseDeveloperExceptionPage();
         app.UseHttpsRedirection();
