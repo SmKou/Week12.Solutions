@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THIS.Library</title>
+    <link rel="stylesheet" href="~/styles.css">
+</head>
+<body>
+    <header>
+        <h1>THIS.Library<h1>
+        <ul class="nav">
+            <li>@Html.ActionLink("Catalog", "Home", "Index")</li>
+            @if (ViewBag.IsLoggedIn)
+            {
+                <li>Hello @ViewBag.Name</li>
+                <li>@Html.ActionLink("Account", "Details", "Account")</li>
+            }
+            else
+            {
+                <li>@Html.ActionLink("Login", "Login", "Account")</li>
+                <li>@Html.ActionLink("Register", "Register", "Account")</li>
+            }
+        </ul>
+    </header>
+    @RenderBody()
+</body>
+</html>
