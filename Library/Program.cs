@@ -36,6 +36,8 @@ class Program
 
         builder.Services.Configure<IdentityOptions>(options =>
         {
+            options.User.RequireUniqueEmail = true;
+            options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ:-._@+";
             /*  Default password settings
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
@@ -60,6 +62,7 @@ class Program
         using (var scope = app.Services.CreateScope())
         {
             var db = scope.ServiceProvider.GetRequiredService<LibraryContext>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             db.Database.Migrate();
 
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -72,7 +75,7 @@ class Program
                     roleManager.CreateAsync(new IdentityRole(role)).Wait();
             }
 
-            DataInitializer.Init(db);
+            DataInitializer.Init(db, userManager);
         }
 
         // app.UseDeveloperExceptionPage();

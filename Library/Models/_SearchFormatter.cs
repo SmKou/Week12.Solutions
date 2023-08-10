@@ -20,6 +20,11 @@ public static class SearchFormatter
         return Format(s_a + s_b + s_c);
     }
 
+    public static string FormatDate(DateTime yms)
+    {
+        return yms.ToString("yyyyMMdd");
+    }
+
     public static string FormatPresentable(string s)
     {
         string[] words = s.Split(" ");

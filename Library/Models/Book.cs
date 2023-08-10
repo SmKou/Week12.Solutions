@@ -5,6 +5,9 @@ public class Book
     public int BookId { get; set; }
     public string Searchable { get; set; }
 
+    public int CountryId { get; set; }
+    public Country Country { get; set; }
+
     public int MaturityRatingId { get; set; }
     public MaturityRating MaturityRating { get; set; }
 

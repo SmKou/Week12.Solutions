@@ -1,19 +1,70 @@
+using Microsoft.AspNetCore.Identity;
+
 namespace Library.Models;
 
 public static class DataInitializer
 {
-    public static bool _hasInit = false;
-
-    public static void Init(LibraryContext db)
+    public async static void Init(LibraryContext db, UserManager<ApplicationUser> userManager)
     {
-        if (_hasInit)
+        try
+        {
+            bool databaseIsEmpty = !db.Authors.Any()
+                && !db.AuthorCategories.Any()
+                && !db.Books.Any()
+                && !db.BookAuthors.Any()
+                && !db.BookCategories.Any()
+                && !db.BookContributors.Any()
+                && !db.BookCopies.Any()
+                && !db.BookSeries.Any()
+                && !db.BookTitles.Any()
+                && !db.BookVersions.Any()
+                && !db.Categories.Any()
+                && !db.Checkouts.Any()
+                && !db.Contributors.Any()
+                && !db.Countries.Any()
+                && !db.Formats.Any()
+                && !db.Languages.Any()
+                && !db.MaturityRatings.Any()
+                && !db.Notifications.Any()
+                && !db.OnHolds.Any()
+                && !db.Patrons.Any()
+                && !db.PatronAuthors.Any()
+                && !db.PatronCategories.Any()
+                && !db.Persons.Any()
+                && !db.Publishers.Any()
+                && !db.Recommendations.Any()
+                && !db.SerialTitles.Any()
+                && !db.Statuses.Any()
+                && !db.UserLanguages.Any()
+                && !db.WaitLists.Any();
+            if (!databaseIsEmpty)
+                return;
+        }
+        catch (NullReferenceException exception)
+        {
+            Console.Write(exception);
             return;
+        }
 
         db.Categories.Add(new Category
         { 
             Name = "Modernist",
             Searchable = SearchFormatter.Format("Modernist"),
             Description = "Originated in the late 19th and early 20th century, charactered by a self-conscious break with traditional ways of writing in both poetry and prose fiction writing." 
+        });
+
+        db.Countries.AddRange(new Country[]
+        {
+            new Country
+            {
+                Name = "United States of America",
+                Searchable = SearchFormatter.Format("United States of America")
+            },
+            new Country
+            {
+                Name = "France",
+                Searchable = SearchFormatter.Format("France")
+            }
         });
         
         db.Formats.AddRange(new Format[]
@@ -85,7 +136,8 @@ public static class DataInitializer
             new Status { Name = "Overdue" },
             new Status { Name = "Last Renewal" },
             new Status { Name = "Renewed" },
-            new Status { Name = "Checked Out" }
+            new Status { Name = "Checked Out" },
+            new Status { Name = "Returned" }
         });
         
         db.Notifications.AddRange(new Notification[]
@@ -146,44 +198,169 @@ public static class DataInitializer
             }
         });
 
-        Person[] persons = new Person[]
+        int countryId = db.Countries
+            .SingleOrDefault(country => country.Searchable.Contains("unitedstates"))
+            .CountryId;
+        db.Persons.AddRange(new Person[]
         {
             new Person
             {
                 FirstName = "Valentin Louis Georges Eugène Marcel",
                 LastName = "Proust",
-                Searchable = SearchFormatter.Format("Valentin Louis Georges Eugène Marcel", "Proust"),
+                Searchable = SearchFormatter.Format("Valentin Louis Georges Eugène Marcel", "Proust", SearchFormatter.FormatDate(new DateTime(1871, 7, 10))),
                 DateOfBirth = new DateTime(1871, 7, 10),
-                CountryOfOrigin = "France"
+                CountryId = db.Countries
+                    .SingleOrDefault(country => country.Searchable == "france")
+                    .CountryId
             },
-            new Person
+            new Person // patron-author
             {
                 FirstName = "Jane",
                 LastName = "Doe",
-                Searchable = SearchFormatter.Format("Jane", "Doe"),
+                Searchable = SearchFormatter.Format("Jane", "Doe", SearchFormatter.FormatDate(new DateTime(2000, 1, 1))),
                 DateOfBirth = new DateTime(2000, 1, 1),
-                CountryOfOrigin = "United States of America"
+                CountryId = countryId
             },
-            new Person
+            new Person // librarian
             {
                 FirstName = "John",
                 LastName = "Smith",
-                Searchable = SearchFormatter.Format("John", "Smith"),
+                Searchable = SearchFormatter.Format("John", "Smith", SearchFormatter.FormatDate(new DateTime(1960, 12, 31))),
                 DateOfBirth = new DateTime(1960, 12, 31),
-                CountryOfOrigin = "United Kingdom"
+                CountryId = countryId
+            },
+            new Person // guardian patron
+            {
+                FirstName = "Joe",
+                LastName = "Johnson",
+                Searchable = SearchFormatter.Format("Joe", "Johnson", SearchFormatter.FormatDate(new DateTime(1980, 7, 7))),
+                DateOfBirth = new DateTime(1980, 7, 7),
+                CountryId = countryId
+            },
+            new Person // child patron
+            {
+                FirstName = "Alexi",
+                LastName = "Johnson",
+                Searchable = SearchFormatter.Format("Alexi", "Johnson", SearchFormatter.FormatDate(new DateTime(2010, 10, 10))),
+                DateOfBirth = new DateTime(2010, 10, 10),
+                CountryId = countryId
+            }
+        });
+
+        
+        ApplicationUser[] members = new ApplicationUser[]
+        {
+            new ApplicationUser // patron-author
+            {
+                CardNumber = "100A0000001",
+                UserName = "JaneMaster",
+                Email = "jmaster@wordpiss.com",
+                PhoneNumber = "010-224-0102",
+                PersonId = db.Persons
+                    .SingleOrDefault(person => person.Searchable.Contains("janedoe"))
+                    .PersonId
+            },
+            new ApplicationUser // librarian
+            {
+                CardNumber = "A0000001",
+                UserName = "Smith01",
+                Email = "jjsmith@thislibrary.com",
+                PhoneNumber = "110-110-1111",
+                PersonId = db.Persons
+                    .SingleOrDefault(person => person.Searchable.Contains("johnsmith"))
+                    .PersonId
+            },
+            new ApplicationUser // child patron
+            {
+                CardNumber = "200A0000001",
+                UserName = "Blue-27:0-40",
+                PersonId = db.Persons
+                    .SingleOrDefault(person => person.Searchable.Contains("alexijohnson"))
+                    .PersonId
+            },
+            new ApplicationUser // guardian patron
+            {
+                CardNumber = "100A0000002",
+                UserName = "1984Joe",
+                Email = "19198484@megabox.com",
+                PhoneNumber = "100-200-3004",
+                PersonId = db.Persons
+                    .SingleOrDefault(person => person.Searchable.Contains("joejohnson"))
+                    .PersonId
             }
         };
-        db.Persons.AddRange(persons);
-        
-        int personId = db.Persons
-            .Single(person => person.Searchable.Contains("marcelproust"))
-            .PersonId;
-        db.Authors.Add(new Author
+        foreach (ApplicationUser user in members)
+            await userManager.CreateAsync(user, "a1");
+
+        Patron[] patrons = new Patron[]
+        {
+            new Patron // patron-author
+            {
+                Searchable = db.Persons
+                    .SingleOrDefault(person => person.Searchable.Contains("janedoe"))
+                    .Searchable,
+                User = await userManager.FindByNameAsync(members[0].UserName)
+            },
+            new Patron // child patron
+            {
+                Searchable = db.Persons
+                    .SingleOrDefault(person => person.Searchable.Contains("alexijohnson"))
+                    .Searchable,
+                GuardianId = db.Persons
+                    .SingleOrDefault(person => person.Searchable.Contains("joejohnson"))
+                    .PersonId,
+                User = await userManager.FindByNameAsync(members[2].UserName)
+            },
+            new Patron // guardian patron
+            {
+                Searchable = db.Persons
+                    .SingleOrDefault(person => person.Searchable.Contains("joejohnson"))
+                    .Searchable,
+                User = await userManager.FindByNameAsync(members[3].UserName)
+            }
+        };
+        db.Patrons.AddRange(patrons);
+
+        ApplicationUser patronauthor = await userManager.FindByNameAsync(members[0].UserName);
+        await userManager.AddToRoleAsync(patronauthor, "author");
+        ApplicationUser librarian = await userManager.FindByNameAsync(members[1].UserName);
+        await userManager.AddToRoleAsync(librarian, "librarian");
+
+        Author deceasedAuthor = new Author
         {
             PenName = "Marcel Proust",
-            Bio = "Valentin...Proust was a French novelest, literary critic, and essayist who wrote the monumantal novel: In Search of Lost Time. The title was previously translated to: Remembrance of Things Past. The novel was originally in French and published in seven volumes between 1913 and 1927. He is considered by critics and writers to be one of the most influential authors of the 20th century.",
+            Searchable = SearchFormatter.Format(
+                db.Persons
+                    .SingleOrDefault(person => person.Searchable.Contains("marcelproust"))
+                    .Searchable,
+                "Marcel Proust"
+            ),
+            Bio = "Marcel Proust was a French novelist, literary critic, and essayist who wrote the monumantal novel: In Search of Lost Time. The title was previously translated to: Remembrance of Things Past. The novel was originally in French and published in seven volumes between 1913 and 1927. He is considered by critics and writers to be one of the most influential authors of the 20th century.",
             Deceased = true,
-            PersonId = personId
+            PersonId = db.Persons
+                    .Single(person => person.Searchable.Contains("marcelproust"))
+                    .PersonId
+        };
+
+        Author livingAuthor = new Author
+        {
+            PenName = "J.D. Middler",
+            Searchable = SearchFormatter.Format(
+                db.Persons
+                    .SingleOrDefault(person => person.Searchable.Contains("janedoe"))
+                    .Searchable,
+                "J.D.Middler"
+            ),
+            Deceased = false,
+            PersonId = db.Persons
+                .SingleOrDefault(person => person.Searchable.Contains("janedoe"))
+                .PersonId
+        };
+
+        db.Authors.AddRange(new Author[]
+        {
+            deceasedAuthor,
+            livingAuthor
         });
 
         db.BookSeries.Add(new BookSerial
@@ -255,10 +432,14 @@ public static class DataInitializer
             .MaturityRatingId;
 
         Book[] books = new Book[titles.Length];
+        countryId = db.Countries
+            .SingleOrDefault(country => country.Searchable.Contains("france"))
+            .CountryId;
         for (int i = 0; i < books.Length; i++)
             books[i] = new Book
             {
                 Searchable = SearchFormatter.Format(titles[i], penname),
+                CountryId = countryId,
                 MaturityRatingId = ratingId,
                 BookSerialId = serialId,
                 NumInSeries = i + 1
@@ -286,7 +467,7 @@ public static class DataInitializer
         }
         db.BookTitles.AddRange(booktitles.ToArray());
 
-        Contributor[] contributors = new Contributor[]
+        db.Contributors.AddRange(new Contributor[]
         {
             new Contributor
             {
@@ -338,8 +519,7 @@ public static class DataInitializer
                 Name = "Ian Patterson",
                 Searchable = SearchFormatter.Format("Ian Patterson")
             }
-        };
-        db.Contributors.AddRange(contributors);
+        });
 
         int formatId = db.Formats
             .SingleOrDefault(format => format.Searchable == "paperbook")
@@ -452,9 +632,116 @@ public static class DataInitializer
             }
         });
 
-        
+        BookVersion[] bookversions = db.BookVersions.ToArray();
+        List<BookCopy> bookcopies = new List<BookCopy>();
+        foreach (BookVersion version in bookversions)
+        {
+            for (int i = 0; i < 3; i++)
+                bookcopies.Add(new BookCopy
+                {
+                    BookVersionId = version.BookVersionId,
+                    BookId = version.BookId
+                });
+        }
+        db.BookCopies.AddRange(bookcopies.ToArray());
+
+        books = db.Books.ToArray();
+        int authorId = db.Authors
+            .SingleOrDefault(author => author.Searchable.Contains("marcelproust"))
+            .AuthorId;
+        List<BookAuthor> bookauthors = new List<BookAuthor>();
+        foreach (Book book in books)
+        {
+            bookauthors.Add(new BookAuthor
+            {
+                BookId = book.BookId,
+                AuthorId = authorId
+            });
+        }
+        db.BookAuthors.AddRange(bookauthors.ToArray());
+
+        int categoryId = db.Categories
+            .SingleOrDefault(category => category.Searchable.Contains("modernist"))
+            .CategoryId;
+        List<BookCategory> bookcategories = new List<BookCategory>();
+        foreach (Book book in books)
+        {
+            bookcategories.Add(new BookCategory
+            {
+                BookId = book.BookId,
+                CategoryId = categoryId
+            });
+        }
+        db.BookCategories.AddRange(bookcategories.ToArray());
+
+        db.Recommendations.Add(new Recommendation
+        {
+            ShowAsAnonymous = false,
+            ConfirmedCheckout = true,
+            Rating = 4,
+            Review = "It was a long and hard read for me and my dad, but we did it!",
+            RecommendationForBook = true,
+            BookId = db.Books
+                .SingleOrDefault(book => book.Searchable.Contains("sodomandgomorrah"))
+                .BookId,
+            BookSerialId = db.BookSeries
+                .SingleOrDefault(serial => serial.Searchable.Contains("insearchoflosttime"))
+                .BookSerialId,
+            PatronId = db.Patrons
+                .SingleOrDefault(patron => patron.Searchable.Contains("alexi"))
+                .PatronId
+        });
+
+        db.Checkouts.Add(new Checkout
+        {
+            CheckedOut = new DateTime(2023, 6, 14),
+            DueDate = new DateTime(2023, 8, 9),
+            NumRenewals = 4,
+            BookCopyId = db.BookCopies
+                .Include(copy => copy.Book)
+                .FirstOrDefault(copy => copy.Book.Searchable.Contains("sodomandgomorrah"))
+                .BookCopyId,
+            PatronId = db.Patrons
+                .SingleOrDefault(patron => patron.Searchable.Contains("alexi"))
+                .PatronId,
+            StatusId = db.Statuses
+                .SingleOrDefault(status => status.Name == "Returned")
+                .StatusId
+        });
+
+        db.OnHolds.Add(new OnHold
+        {
+            DatePlaced = new DateTime(2023, 8, 6),
+            BookCopyId = db.BookCopies
+                .Include(copy => copy.Book)
+                .LastOrDefault(copy => copy.Book.Searchable.Contains("sodomandgomorrah"))
+                .BookCopyId,
+            PatronId = db.Patrons
+                .SingleOrDefault(patron => patron.Searchable.Contains("janedoe"))
+                .PatronId
+        });
+
+        db.WaitLists.Add(new WaitList
+        { 
+            BookId = db.Books
+                .FirstOrDefault(book => book.Searchable.Contains("sodomandgomorrah"))
+                .BookId,
+            FormatId = formatId,
+            PatronId = db.Patrons
+                .SingleOrDefault(patron => patron.Searchable.Contains("janedoe"))
+                .PatronId
+        });
+
+        db.UserNotifications.Add(new UserNotification
+        {
+            SentAt = DateTime.Now,
+            SeenByUser = false,
+            NotificationId = db.Notifications
+                .SingleOrDefault(notice => notice.Description.Contains("Checkout"))
+                .NotificationId,
+            User = await userManager.FindByNameAsync(members[0].UserName)
+        });
 
         db.SaveChanges();
-        _hasInit = true;
     }
 }

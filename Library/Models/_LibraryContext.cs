@@ -9,6 +9,7 @@ public class LibraryContext : IdentityDbContext<ApplicationUser>
     public DbSet<Category> Categories { get; set; }
     public DbSet<Checkout> Checkouts { get; set; }
     public DbSet<Contributor> Contributors { get; set; }
+    public DbSet<Country> Countries { get; set; }
     public DbSet<Format> Formats { get; set; }
     public DbSet<Language> Languages { get; set; }
     public DbSet<MaturityRating> MaturityRatings { get; set; }

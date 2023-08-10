@@ -7,5 +7,7 @@ public class Person
     public string LastName { get; set; }
     public string Searchable { get; set; }
     public DateTime DateOfBirth { get; set; }
-    public string CountryOfOrigin { get; set; }
+
+    public int CountryId { get; set; }
+    public Country Country { get; set; }
 }
