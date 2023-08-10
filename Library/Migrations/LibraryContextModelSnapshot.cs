@@ -407,6 +407,48 @@ namespace Library.Migrations
                     b.ToTable("Checkouts");
                 });
 
+            modelBuilder.Entity("Library.Models.ChildGuardian", b =>
+                {
+                    b.Property<int>("ChildGuardianId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("ChildPatronId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GuardianPatronId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("HasPermissionForComputer")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("HasPermissionToCheckoutAlone")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("HasPermissionToPrint")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("HasPermissionToPublish")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("MaturityRatingId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PatronId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Relation")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("ChildGuardianId");
+
+                    b.HasIndex("MaturityRatingId");
+
+                    b.HasIndex("PatronId");
+
+                    b.ToTable("ChildGuardians");
+                });
+
             modelBuilder.Entity("Library.Models.Contributor", b =>
                 {
                     b.Property<int>("ContributorId")
@@ -545,9 +587,6 @@ namespace Library.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("GuardianId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Searchable")
                         .HasColumnType("longtext");
 
@@ -555,8 +594,6 @@ namespace Library.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.HasKey("PatronId");
-
-                    b.HasIndex("GuardianId");
 
                     b.HasIndex("UserId");
 
@@ -1163,6 +1200,21 @@ namespace Library.Migrations
                     b.Navigation("Status");
                 });
 
+            modelBuilder.Entity("Library.Models.ChildGuardian", b =>
+                {
+                    b.HasOne("Library.Models.MaturityRating", "MaturityRating")
+                        .WithMany()
+                        .HasForeignKey("MaturityRatingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Library.Models.Patron", null)
+                        .WithMany("Relations")
+                        .HasForeignKey("PatronId");
+
+                    b.Navigation("MaturityRating");
+                });
+
             modelBuilder.Entity("Library.Models.OnHold", b =>
                 {
                     b.HasOne("Library.Models.BookCopy", "BookCopy")
@@ -1184,17 +1236,9 @@ namespace Library.Migrations
 
             modelBuilder.Entity("Library.Models.Patron", b =>
                 {
-                    b.HasOne("Library.Models.Patron", "Guardian")
-                        .WithMany()
-                        .HasForeignKey("GuardianId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Library.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
-
-                    b.Navigation("Guardian");
 
                     b.Navigation("User");
                 });
@@ -1471,6 +1515,8 @@ namespace Library.Migrations
                     b.Navigation("Holds");
 
                     b.Navigation("Recommendations");
+
+                    b.Navigation("Relations");
 
                     b.Navigation("Waitlists");
                 });

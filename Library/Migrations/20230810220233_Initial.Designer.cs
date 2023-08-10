@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Library.Migrations
 {
     [DbContext(typeof(LibraryContext))]
-    [Migration("20230809065740_AddBookJoinsandPerson")]
-    partial class AddBookJoinsandPerson
+    [Migration("20230810220233_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -110,6 +110,9 @@ namespace Library.Migrations
                     b.Property<int>("PersonId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Searchable")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("UserId")
                         .HasColumnType("varchar(255)");
 
@@ -155,10 +158,10 @@ namespace Library.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("BookName")
-                        .HasColumnType("longtext");
-
                     b.Property<int>("BookSerialId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CountryId")
                         .HasColumnType("int");
 
                     b.Property<int>("MaturityRatingId")
@@ -167,9 +170,14 @@ namespace Library.Migrations
                     b.Property<int>("NumInSeries")
                         .HasColumnType("int");
 
+                    b.Property<string>("Searchable")
+                        .HasColumnType("longtext");
+
                     b.HasKey("BookId");
 
                     b.HasIndex("BookSerialId");
+
+                    b.HasIndex("CountryId");
 
                     b.HasIndex("MaturityRatingId");
 
@@ -272,7 +280,7 @@ namespace Library.Migrations
                     b.Property<bool>("IsFinished")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("SerialName")
+                    b.Property<string>("Searchable")
                         .HasColumnType("longtext");
 
                     b.HasKey("BookSerialId");
@@ -291,6 +299,9 @@ namespace Library.Migrations
 
                     b.Property<int>("LanguageId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Searchable")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Title")
                         .HasColumnType("longtext");
@@ -356,6 +367,9 @@ namespace Library.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Searchable")
+                        .HasColumnType("longtext");
+
                     b.HasKey("CategoryId");
 
                     b.ToTable("Categories");
@@ -396,6 +410,48 @@ namespace Library.Migrations
                     b.ToTable("Checkouts");
                 });
 
+            modelBuilder.Entity("Library.Models.ChildGuardian", b =>
+                {
+                    b.Property<int>("ChildGuardianId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("ChildPatronId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GuardianPatronId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("HasPermissionForComputer")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("HasPermissionToCheckoutAlone")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("HasPermissionToPrint")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("HasPermissionToPublish")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("MaturityRatingId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PatronId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Relation")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("ChildGuardianId");
+
+                    b.HasIndex("MaturityRatingId");
+
+                    b.HasIndex("PatronId");
+
+                    b.ToTable("ChildGuardians");
+                });
+
             modelBuilder.Entity("Library.Models.Contributor", b =>
                 {
                     b.Property<int>("ContributorId")
@@ -405,9 +461,29 @@ namespace Library.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Searchable")
+                        .HasColumnType("longtext");
+
                     b.HasKey("ContributorId");
 
                     b.ToTable("Contributors");
+                });
+
+            modelBuilder.Entity("Library.Models.Country", b =>
+                {
+                    b.Property<int>("CountryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Searchable")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("CountryId");
+
+                    b.ToTable("Countries");
                 });
 
             modelBuilder.Entity("Library.Models.Format", b =>
@@ -417,6 +493,9 @@ namespace Library.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Searchable")
                         .HasColumnType("longtext");
 
                     b.HasKey("FormatId");
@@ -431,6 +510,9 @@ namespace Library.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Searchable")
                         .HasColumnType("longtext");
 
                     b.HasKey("LanguageId");
@@ -508,15 +590,13 @@ namespace Library.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("GuardianId")
-                        .HasColumnType("int");
+                    b.Property<string>("Searchable")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("UserId")
                         .HasColumnType("varchar(255)");
 
                     b.HasKey("PatronId");
-
-                    b.HasIndex("GuardianId");
 
                     b.HasIndex("UserId");
 
@@ -580,8 +660,8 @@ namespace Library.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("CountryOfOrigin")
-                        .HasColumnType("longtext");
+                    b.Property<int>("CountryId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime(6)");
@@ -592,7 +672,12 @@ namespace Library.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Searchable")
+                        .HasColumnType("longtext");
+
                     b.HasKey("PersonId");
+
+                    b.HasIndex("CountryId");
 
                     b.ToTable("Persons");
                 });
@@ -604,6 +689,9 @@ namespace Library.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Searchable")
                         .HasColumnType("longtext");
 
                     b.HasKey("PublisherId");
@@ -663,6 +751,9 @@ namespace Library.Migrations
 
                     b.Property<int>("LanguageId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Searchable")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Title")
                         .HasColumnType("longtext");
@@ -936,6 +1027,12 @@ namespace Library.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Library.Models.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Library.Models.MaturityRating", "MaturityRating")
                         .WithMany()
                         .HasForeignKey("MaturityRatingId")
@@ -943,6 +1040,8 @@ namespace Library.Migrations
                         .IsRequired();
 
                     b.Navigation("BookSerial");
+
+                    b.Navigation("Country");
 
                     b.Navigation("MaturityRating");
                 });
@@ -1104,6 +1203,21 @@ namespace Library.Migrations
                     b.Navigation("Status");
                 });
 
+            modelBuilder.Entity("Library.Models.ChildGuardian", b =>
+                {
+                    b.HasOne("Library.Models.MaturityRating", "MaturityRating")
+                        .WithMany()
+                        .HasForeignKey("MaturityRatingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Library.Models.Patron", null)
+                        .WithMany("Relations")
+                        .HasForeignKey("PatronId");
+
+                    b.Navigation("MaturityRating");
+                });
+
             modelBuilder.Entity("Library.Models.OnHold", b =>
                 {
                     b.HasOne("Library.Models.BookCopy", "BookCopy")
@@ -1125,17 +1239,9 @@ namespace Library.Migrations
 
             modelBuilder.Entity("Library.Models.Patron", b =>
                 {
-                    b.HasOne("Library.Models.Patron", "Guardian")
-                        .WithMany()
-                        .HasForeignKey("GuardianId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Library.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
-
-                    b.Navigation("Guardian");
 
                     b.Navigation("User");
                 });
@@ -1176,6 +1282,17 @@ namespace Library.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("Patron");
+                });
+
+            modelBuilder.Entity("Library.Models.Person", b =>
+                {
+                    b.HasOne("Library.Models.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Country");
                 });
 
             modelBuilder.Entity("Library.Models.Recommendation", b =>
@@ -1401,6 +1518,8 @@ namespace Library.Migrations
                     b.Navigation("Holds");
 
                     b.Navigation("Recommendations");
+
+                    b.Navigation("Relations");
 
                     b.Navigation("Waitlists");
                 });

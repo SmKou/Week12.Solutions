@@ -28,7 +28,7 @@ ul { list-style: none }
 a, p, li { font-size: 1.6rem }
 
 header {
-    position: sticky;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -66,18 +66,20 @@ h1 {
 
 main {
     width: 100%;
+    padding-top: 9rem;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-main section {
+section {
     width: 85%;
     max-width: 68rem;
 }
 
 .form-entry {
     width: 100%;
+    margin: 1.2rem 0;
     display: grid;
     grid-template-columns: 12rem 1fr;
 }

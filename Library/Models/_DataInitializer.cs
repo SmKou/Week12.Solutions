@@ -22,7 +22,7 @@ public static class DataInitializer
                 db.SaveChanges();
             }
 
-            if (!db.Categories.Any())
+            if (!db.Countries.Any())
             {
                 db.Countries.AddRange(new Country[]
                 {
@@ -202,48 +202,48 @@ public static class DataInitializer
                     .CountryId;
                 db.Persons.AddRange(new Person[]
                 {
-            new Person
-            {
-                FirstName = "Valentin Louis Georges Eugène Marcel",
-                LastName = "Proust",
-                Searchable = SearchFormatter.Format("Valentin Louis Georges Eugène Marcel", "Proust", SearchFormatter.FormatDate(new DateTime(1871, 7, 10))),
-                DateOfBirth = new DateTime(1871, 7, 10),
-                CountryId = db.Countries
-                    .SingleOrDefault(country => country.Searchable == "france")
-                    .CountryId
-            },
-            new Person // patron-author
-            {
-                FirstName = "Jane",
-                LastName = "Doe",
-                Searchable = SearchFormatter.Format("Jane", "Doe", SearchFormatter.FormatDate(new DateTime(2000, 1, 1))),
-                DateOfBirth = new DateTime(2000, 1, 1),
-                CountryId = countryId
-            },
-            new Person // librarian
-            {
-                FirstName = "John",
-                LastName = "Smith",
-                Searchable = SearchFormatter.Format("John", "Smith", SearchFormatter.FormatDate(new DateTime(1960, 12, 31))),
-                DateOfBirth = new DateTime(1960, 12, 31),
-                CountryId = countryId
-            },
-            new Person // guardian patron
-            {
-                FirstName = "Joe",
-                LastName = "Johnson",
-                Searchable = SearchFormatter.Format("Joe", "Johnson", SearchFormatter.FormatDate(new DateTime(1980, 7, 7))),
-                DateOfBirth = new DateTime(1980, 7, 7),
-                CountryId = countryId
-            },
-            new Person // child patron
-            {
-                FirstName = "Alexi",
-                LastName = "Johnson",
-                Searchable = SearchFormatter.Format("Alexi", "Johnson", SearchFormatter.FormatDate(new DateTime(2010, 10, 10))),
-                DateOfBirth = new DateTime(2010, 10, 10),
-                CountryId = countryId
-            }
+                    new Person
+                    {
+                        FirstName = "Valentin Louis Georges Eugène Marcel",
+                        LastName = "Proust",
+                        Searchable = SearchFormatter.Format("Valentin Louis Georges Eugène Marcel", "Proust", SearchFormatter.FormatDate(new DateTime(1871, 7, 10))),
+                        DateOfBirth = new DateTime(1871, 7, 10),
+                        CountryId = db.Countries
+                            .SingleOrDefault(country => country.Searchable == "france")
+                            .CountryId
+                    },
+                    new Person // patron-author
+                    {
+                        FirstName = "Jane",
+                        LastName = "Doe",
+                        Searchable = SearchFormatter.Format("Jane", "Doe", SearchFormatter.FormatDate(new DateTime(2000, 1, 1))),
+                        DateOfBirth = new DateTime(2000, 1, 1),
+                        CountryId = countryId
+                    },
+                    new Person // librarian
+                    {
+                        FirstName = "John",
+                        LastName = "Smith",
+                        Searchable = SearchFormatter.Format("John", "Smith", SearchFormatter.FormatDate(new DateTime(1960, 12, 31))),
+                        DateOfBirth = new DateTime(1960, 12, 31),
+                        CountryId = countryId
+                    },
+                    new Person // guardian patron
+                    {
+                        FirstName = "Joe",
+                        LastName = "Johnson",
+                        Searchable = SearchFormatter.Format("Joe", "Johnson", SearchFormatter.FormatDate(new DateTime(1980, 7, 7))),
+                        DateOfBirth = new DateTime(1980, 7, 7),
+                        CountryId = countryId
+                    },
+                    new Person // child patron
+                    {
+                        FirstName = "Alexi",
+                        LastName = "Johnson",
+                        Searchable = SearchFormatter.Format("Alexi", "Johnson", SearchFormatter.FormatDate(new DateTime(2010, 10, 10))),
+                        DateOfBirth = new DateTime(2010, 10, 10),
+                        CountryId = countryId
+                    }
                 });
                 db.SaveChanges();
             }
@@ -251,52 +251,55 @@ public static class DataInitializer
 
             ApplicationUser[] members = new ApplicationUser[]
             {
-            new ApplicationUser // patron-author
-            {
-                CardNumber = "100A0000001",
-                UserName = "JaneMaster",
-                Email = "jmaster@wordpiss.com",
-                PhoneNumber = "010-224-0102",
-                PersonId = db.Persons
-                    .SingleOrDefault(person => person.Searchable.Contains("janedoe"))
-                    .PersonId
-            },
-            new ApplicationUser // librarian
-            {
-                CardNumber = "A0000001",
-                UserName = "Smith01",
-                Email = "jjsmith@thislibrary.com",
-                PhoneNumber = "110-110-1111",
-                PersonId = db.Persons
-                    .SingleOrDefault(person => person.Searchable.Contains("johnsmith"))
-                    .PersonId
-            },
-            new ApplicationUser // child patron
-            {
-                CardNumber = "200A0000001",
-                UserName = "Blue-27:0-40",
-                PersonId = db.Persons
-                    .SingleOrDefault(person => person.Searchable.Contains("alexijohnson"))
-                    .PersonId
-            },
-            new ApplicationUser // guardian patron
-            {
-                CardNumber = "100A0000002",
-                UserName = "1984Joe",
-                Email = "19198484@megabox.com",
-                PhoneNumber = "100-200-3004",
-                PersonId = db.Persons
-                    .SingleOrDefault(person => person.Searchable.Contains("joejohnson"))
-                    .PersonId
-            }
+                new ApplicationUser // patron-author
+                {
+                    CardNumber = "100A0000001",
+                    UserName = "JaneMaster",
+                    Email = "jmaster@wordpiss.com",
+                    PhoneNumber = "010-224-0102",
+                    PersonId = db.Persons
+                        .SingleOrDefault(person => person.Searchable.Contains("janedoe"))
+                        .PersonId
+                },
+                new ApplicationUser // librarian
+                {
+                    CardNumber = "A0000001",
+                    UserName = "Smith01",
+                    Email = "jjsmith@thislibrary.com",
+                    PhoneNumber = "110-110-1111",
+                    PersonId = db.Persons
+                        .SingleOrDefault(person => person.Searchable.Contains("johnsmith"))
+                        .PersonId
+                },
+                new ApplicationUser // child patron
+                {
+                    CardNumber = "200A0000001",
+                    UserName = "Blue-27:0-40",
+                    PersonId = db.Persons
+                        .SingleOrDefault(person => person.Searchable.Contains("alexijohnson"))
+                        .PersonId
+                },
+                new ApplicationUser // guardian patron
+                {
+                    CardNumber = "100A0000002",
+                    UserName = "1984Joe",
+                    Email = "19198484@megabox.com",
+                    PhoneNumber = "100-200-3004",
+                    PersonId = db.Persons
+                        .SingleOrDefault(person => person.Searchable.Contains("joejohnson"))
+                        .PersonId
+                }
             };
 
-            if (userManager.Users == null)
+            if (!db.Users.Any())
             {
                 foreach (ApplicationUser user in members)
                     await userManager.CreateAsync(user, "a1");
+                db.SaveChanges();
+
                 ApplicationUser patronauthor = await userManager.FindByNameAsync(members[0].UserName);
                 await userManager.AddToRoleAsync(patronauthor, "author");
+
                 ApplicationUser librarian = await userManager.FindByNameAsync(members[1].UserName);
                 await userManager.AddToRoleAsync(librarian, "librarian");
                 db.SaveChanges();
@@ -811,12 +814,12 @@ public static class DataInitializer
                 {
                     DatePlaced = new DateTime(2023, 8, 6),
                     BookCopyId = db.BookCopies
-                    .Include(copy => copy.Book)
-                    .LastOrDefault(copy => copy.Book.Searchable.Contains("sodomandgomorrah"))
-                    .BookCopyId,
+                        .Include(copy => copy.Book)
+                        .FirstOrDefault(copy => copy.Book.Searchable.Contains("intheshadow"))
+                        .BookCopyId,
                     PatronId = db.Patrons
-                    .SingleOrDefault(patron => patron.Searchable.Contains("janedoe"))
-                    .PatronId
+                        .SingleOrDefault(patron => patron.Searchable.Contains("janedoe"))
+                        .PatronId
                 });
                 db.SaveChanges();
             }

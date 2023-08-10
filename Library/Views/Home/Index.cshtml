@@ -10,14 +10,19 @@
         @using (Html.BeginForm("Search", "Home", FormMethod.Post))
         {
             <div class="form-entry">
-                @Html.LabelFor(model => model.TitleQuery)
+                @Html.Label("TitleQuery", "Search Title")
                 @Html.TextBoxFor(model => model.TitleQuery)
             </div>
             <div class="form-entry">
-                @Html.LabelFor(model => model.AuthorQuery)
+                @Html.Label("AuthorQuery", "Search Author")
                 @Html.TextBoxFor(model => model.AuthorQuery)
             </div>
             <input type="submit" value="Search" />
+            <br>
+            @if (ViewBag.QueryError != null)
+            {
+                <p>@ViewBag.QueryError</p>
+            }
         }
     </section>
     <section>
