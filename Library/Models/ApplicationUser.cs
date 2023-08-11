@@ -4,21 +4,18 @@ namespace Library.Models;
 
 public class ApplicationUser : IdentityUser
 {
-    /* Inherited */
-    // Id
-    // Role
-    // UserName
-    // NormalizedUserName
-    // Email
-    // NormalizedEmail
-    // PasswordHash
-    // PhoneNumber
-    
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public DateTime DOB { get; set; }
+    public string Country { get; set; }
+    public string PreferredLanguage { get; set; }
     public string CardNumber { get; set; }
-    
-    public int PersonId { get; set; }
-    public Person Person;
 
-    public List<UserLanguage> Languages { get; }
-    public List<UserNotification> Notifications { get; }
+    public List<Notification> Notifications { get; }
+    public List<UserList> Lists { get; }
+    public List<Checkout> Checkouts { get; }
+    public List<HoldList> Holds { get; }
+
+    // firstname-lastname-dob-cardnumber
+    public string Searchable { get; set; }
 }

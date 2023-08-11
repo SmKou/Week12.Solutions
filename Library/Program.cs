@@ -38,20 +38,12 @@ class Program
         {
             options.User.RequireUniqueEmail = true;
             options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ:-._@+";
-            /*  Default password settings
-                options.Password.RequireDigit = true;
-                options.Password.RequireLowercase = true;
-                options.Password.RequireNonAlphanumeric = true;
-                options.Password.RequireUppercase = true;
-                options.Password.RequiredLength = 6;
-                options.Password.RequiredUniqueChars = 1;
-            */
-            options.Password.RequireDigit = false;
-            options.Password.RequireLowercase = false;
-            options.Password.RequireNonAlphanumeric = false;
-            options.Password.RequireUppercase = false;
-            options.Password.RequiredLength = 0;
-            options.Password.RequiredUniqueChars = 0;
+            options.Password.RequireDigit = true;
+            options.Password.RequireLowercase = true;
+            options.Password.RequireNonAlphanumeric = true;
+            options.Password.RequireUppercase = true;
+            options.Password.RequiredLength = 6;
+            options.Password.RequiredUniqueChars = 1;
         });
 
         builder.Services.AddAuthorization(options => options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Librarian")));
@@ -72,8 +64,6 @@ class Program
             }
         }
 
-        DataInitializer.Init(app);
-
         // app.UseDeveloperExceptionPage();
         app.UseHttpsRedirection();
         app.UseStaticFiles();
@@ -87,6 +77,7 @@ class Program
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
 
+        // app.MigrateDatabase();
         app.Run();
     }
 }

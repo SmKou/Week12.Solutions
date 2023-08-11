@@ -28,22 +28,22 @@ public class HomeController : Controller
             ViewBag.Name = member.FirstName;
         }
 
-        if (TempData["SpecialError"] != null)
-            ViewBag.QueryError = TempData["SpecialError"];
+        // if (TempData["SpecialError"] != null)
+        //     ViewBag.QueryError = TempData["SpecialError"];
 
-        if (TempData["Matches"] != null)
-            ViewBag.Matches = TempData["Matches"];
+        // if (TempData["Matches"] != null)
+        //     ViewBag.Matches = TempData["Matches"];
         return View();
     }
 
     // Search for books by author and title
-    public ActionResult Search(QueryViewModel model)
-    {
-        if (model.TitleQuery == null && model.AuthorQuery == null)
-        {
-            TempData["SpecialError"] = "Search by author and/or title.";
-            return RedirectToAction("Index");
-        }
+    // public ActionResult Search(QueryViewModel model)
+    // {
+    //     if (model.TitleQuery == null && model.AuthorQuery == null)
+    //     {
+    //         TempData["SpecialError"] = "Search by author and/or title.";
+    //         return RedirectToAction("Index");
+    //     }
 
         List<BookMatchViewModel> matches = new List<BookMatchViewModel>();
         // if (model.TitleQuery != null && model.AuthorQuery != null)
@@ -56,16 +56,16 @@ public class HomeController : Controller
         // {
         // }
 
-        if (matches.Count == 0)
-        {
-            TempData["SpecialError"] = "No matches found.";
-            return RedirectToAction("Index");
-        }
+    //     if (matches.Count == 0)
+    //     {
+    //         TempData["SpecialError"] = "No matches found.";
+    //         return RedirectToAction("Index");
+    //     }
 
-        TempData["Matches"] = matches;
+    //     TempData["Matches"] = matches;
 
-        return RedirectToAction("Index");
-    }
+    //     return RedirectToAction("Index");
+    // }
 
     
 }

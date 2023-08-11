@@ -7,62 +7,31 @@
 
 <main>
     <section>
-        @using (Html.BeginForm("Search", "Home", FormMethod.Post))
-        {
-            <div class="form-entry">
-                @Html.Label("TitleQuery", "Search Title")
-                @Html.TextBoxFor(model => model.TitleQuery)
-            </div>
-            <div class="form-entry">
-                @Html.Label("AuthorQuery", "Search Author")
-                @Html.TextBoxFor(model => model.AuthorQuery)
-            </div>
-            <input type="submit" value="Search" />
-            <br>
-            @if (ViewBag.QueryError != null)
-            {
-                <p>@ViewBag.QueryError</p>
-            }
-        }
-    </section>
-    <section>
-        @if (ViewBag.Matches != null)
-        {
-            <h3>Your Matches:</h3>
-            <ul>
-                @foreach (BookMatchViewModel res in ViewBag.Matches)
-                {
-                    <li class="list-row">
-                        <a href="/Books/Details/@res.BookId">
-                            <div class="list-entry">
-                                Book: @res.Title
-                            </div>
-                            <div class="list-entry">
-                                Titles: 
-                                @if (res.MatchInTitles == null) 
-                                {
-                                    <span>No matches found.</span>
-                                }
-                                else
-                                {
-                                    <span>@res.MatchInTitles</span>
-                                }
-                            </div>
-                            <div class="list-entry">
-                                Authors:
-                                @if (res.MatchInAuthors == null)
-                                {
-                                    <span>No matches found.</span>
-                                }
-                                else
-                                {
-                                    <span>@res.MatchInAuthors</span>
-                                }
-                            </div>
-                        </a>
-                    </li>
-                }
-            </ul>
-        }
+        <!-- Checklist:
+            - Register [regular user]
+            - Login
+            - Register and remain logged in
+            - Register [librarian]
+            - Login
+            - Register and remain logged in
+
+            Books
+            [allowanonymous]
+            - Read / Details
+            - method: Search
+            [librarian]
+            - Create
+            - Update
+            - Delete
+
+            Account
+            [user | librarian]
+            - Read / Details
+            - Update
+            [librarian]
+            - Create
+            - Delete
+            - method: Search
+        -->
     </section>
 </main>

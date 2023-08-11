@@ -1,12 +1,12 @@
 namespace Library.Models;
 
-public class BookSerial 
+public class BookSerial
 {
     public int BookSerialId { get; set; }
-    public string Searchable { get; set; }
-    public bool IsFinished { get; set; }
 
-    public List<SerialTitle> Titles { get; }
-    public List<Book> Books { get; }
-    public List<Recommendation> Recommendations { get; }
+    public int BookId { get; set; }
+    public Book Book { get; set; }
+
+    public int SerialId { get; set; }
+    public Serial Serial { get; set; }
 }

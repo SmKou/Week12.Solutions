@@ -1,9 +1,10 @@
 namespace Library.Models;
 
-public class WaitList
+public class HoldList
 {
-    public int WaitListId { get; set; }
+    public int HoldListId { get; set; }
     public DateTime DatePlaced { get; set; }
+    public DateTime DateReleased { get; set; }
 
     public int BookId { get; set; }
     public Book Book { get; set; }

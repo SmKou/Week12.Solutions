@@ -8,13 +8,8 @@ public class ChildGuardian
     public bool HasPermissionForComputer { get; set; }
     public bool HasPermissionToPrint { get; set; }
     public bool HasPermissionToPublish { get; set; }
+    public string MaturityRating { get; set; }
 
-    public int MaturityRatingId { get; set; }
-    public MaturityRating MaturityRating { get; set; }
-
-    public int ChildPatronId { get; set; }
-    public Patron ChildPatron;
-
-    public int GuardianPatronId { get; set; }
-    public Patron GuardianPatron;
+    public ApplicationUser ChildUser { get; set; }
+    public ApplicationUser GuardianUser { get; set; }
 }
