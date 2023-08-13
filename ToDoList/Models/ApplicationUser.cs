@@ -4,7 +4,10 @@ namespace ToDoList.Models;
 
 public class ApplicationUser : IdentityUser
 {
-    public string CustomTag { get; set; }
+    [PersonalData]
+    public string? Name { get; set; }
+    [PersonalData]
+    public DateTime DOB { get; set; }
 }
 
 /*
